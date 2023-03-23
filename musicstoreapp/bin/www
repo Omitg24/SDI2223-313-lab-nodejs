@@ -14,9 +14,6 @@ var http = require('http');
 
 var port = normalizePort(process.env.PORT || '8081');
 app.set('port', port);
-var server = http.createServer(app);
-server.listen(app.get('port'));
-server.listen(port);
 
 /**
  * Create HTTP server.
@@ -28,7 +25,7 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(app.get('port'))
 server.on('error', onError);
 server.on('listening', onListening);
 
