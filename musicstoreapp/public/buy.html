@@ -1,0 +1,34 @@
+{% extends "layout.twig" %}
+{% block title %} Mis publicaciones {% endblock %}
+
+{% block main_container %}
+<h2>Mis compras</h2>
+
+<!-- Agregar Canción -->
+<div class="table-responsive">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Nombre</th>
+				<th>Genero</th>
+				<th class="col-md-1"></th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for song in canciones %}
+			<tr>
+				<td>{{ song.title }}</td>
+				<td>{{ song.kind }}</td>
+				<td>
+					 <audio controls>
+					   <source src="/audios/{{ song._id.toString() }}.mp3" type="audio/mpeg">
+					</audio>  
+			    </td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+
+{% endblock %}

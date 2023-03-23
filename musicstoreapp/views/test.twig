@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Canciones</title>
+</head>
+<body>
+<h1>{{ seller }}</h1>
+<ul>
+    {% for song in songs %}
+        <li>
+            {{ song.title }} - {{ song.price }}
+        </li>
+    {% endfor %}
+</ul>
+</body>
+</html>
