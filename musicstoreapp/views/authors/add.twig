@@ -21,11 +21,9 @@
         <label class="control-label col-sm-2" for="role">Rol:</label>
         <div class="col-sm-10">
             <select class="form-control" id="role" name="role" required>
-                <option value="cantante">Cantante</option>
-                <option value="batería">Batería</option>
-                <option value="guitarrista">Guitarrista</option>
-                <option value="bajista">Bajista</option>
-                <option value="pianista">Pianista</option>
+                {% for role in roles %}
+                    <option value={{ role.value }}>{{ role.name }}</option>
+                {% endfor %}
             </select>
         </div>
     </div>
