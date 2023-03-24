@@ -8,10 +8,11 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
-require("./routes/songs.js")(app);
 let bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+require("./routes/songs.js")(app);
+require("./routes/authors.js")(app);
 
 app.get("/songs", function (req, res) {
     console.log("depurar aqui")

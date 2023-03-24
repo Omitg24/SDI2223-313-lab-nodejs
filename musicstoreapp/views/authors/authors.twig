@@ -1,0 +1,46 @@
+{% extends "layout.twig" %}
+{% block title %} Autores – uoMusic {% endblock %}
+{% block main_container %}
+    <!-- Búsqueda -->
+    <div class="row">
+        <div id="custom-search-input ">
+            <form method="get" action="/authors">
+                <div class="input-group col-xs-8 col-sm-6 col-md-4 col-lg-5 pull-right">
+                    <input id="search" type="text" class="search-query form-control"
+                           placeholder="Nombre del autor" name="search"/>
+                    <span class="input-group-btn">
+                <button class="btn" type="submit">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+                </span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <h2>Autores</h2>
+    <div class="row">
+        <!--Inicio del bloque autores-->
+        {% for author in authors %}
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div style="width:200px">
+                    <img src="/images/user.png" alt="logo"/>
+                    <div>{{ author.name }} </div>
+                    <div>{{ author.group }} </div>
+                    <div>{{ author.role }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <!-- Paginación mostrar la actual y 2 anteriores y dos siguientes -->
+    <div class="row text-center">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+        </ul>
+    </div>
+{% endblock %}

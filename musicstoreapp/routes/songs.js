@@ -14,7 +14,13 @@ module.exports = function (app) {
             seller: "Tienda de canciones",
             songs: songs
         };
-        res.render("shop.twig", response);
+        res.render("authors.twig", response);
+    });
+    app.post("/songs/add", function (req, res) {
+       let response = "Canción agregada: " + req.body.title + "<br>"
+        + " género: " + req.body.kind + "<br>"
+        + " precio: " + req.body.price;
+       res.send(response);
     });
     app.get('/songs/add', function (req, res) {
         res.render("add.twig");
