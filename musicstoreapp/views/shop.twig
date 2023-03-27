@@ -24,9 +24,8 @@
         {% for song in songs %}
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div style="width:200px">
-                    <a href="/songs/{{song._id}}">
-                        <img src="/covers/{{song._id}}.png" alt="logo"/>
-                        <!-- http://www.socicon.com/generator.php -->
+                    <a href="/songs/{{ song._id }}">
+                        <img src="/covers/{{ song._id }}.png" alt="logo"/>
                         <div>{{ song.title }} </div>
                         <div class="small">{{ song.author }} </div>
                         <div class="text-right">{{ song.price }} €</div>

@@ -29,11 +29,23 @@ module.exports = function (app, songsRepository) {
         };
         res.render("authors.twig", response);
     });
-    app.post("/songs/add", function (req, res) {
+    app.get('/songs/add', function (req, res) {
+        if ( req.session.user == null){
+            res.redirect("/shop");
+            return;
+        }
+        res.render("songs/add.twig")
+    });
+    app.post('/songs/add', function (req, res) {
+        if ( req.session.user == null){
+            res.redirect("/shop");
+            return;
+        }
         let song = {
             title: req.body.title,
             kind: req.body.kind,
-            price: req.body.price
+            price: req.body.price,
+            author: req.session.user
         }
         songsRepository.insertSong(song, function (songId) {
             if (songId == null) {
@@ -62,9 +74,6 @@ module.exports = function (app, songsRepository) {
                 }
             }
         });
-    });
-    app.get('/songs/add', function (req, res) {
-        res.render("songs/add.twig");
     });
     app.get('/songs/:id', function (req, res) {
         let filter = {_id: ObjectId(req.params.id)};
