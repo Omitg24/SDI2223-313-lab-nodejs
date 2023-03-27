@@ -11,10 +11,13 @@ var app = express();
 let bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 const { MongoClient } = require("mongodb");
 const url = 'mongodb+srv://admin:sdi@musicstoreapp.tq9doky.mongodb.net/?retryWrites=true&w=majority';
 app.set('connectionStrings', url);
-require("./routes/songs.js")(app, MongoClient);
+let songsRepository = require("./repositories/songsRepository.js");
+songsRepository.init(app, MongoClient);
+require("./routes/songs.js")(app, songsRepository);
 require("./routes/authors.js")(app);
 
 app.get("/songs", function (req, res) {
