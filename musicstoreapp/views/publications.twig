@@ -1,0 +1,34 @@
+{% extends "layout.twig" %}
+{% block title %} Mis publicaciones {% endblock %}
+{% block main_container %}
+    <h2>Mis publicaciones</h2>
+    <!-- Agregar Canción -->
+    <div class="row text-right">
+        <a href="/songs/add" class="btn btn-info" role="button">Agregar canción</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Genero</th>
+                <th class="col-md-1"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for song in songs %}
+                <tr>
+                    <td>{{ song.title }}</td>
+                    <td>{{ song.kind }}</td>
+                    <td><a href="/songs/edit/{{ song._id }}">Modificar</a> <br>
+                        <a href="/songs/delete/{{ song._id }}">Eliminar</a> <br>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row text-right">
+        <a href="/songs/add" class="btn btn-info" role="button">Agregar canción</a>
+    </div>
+{% endblock %}
