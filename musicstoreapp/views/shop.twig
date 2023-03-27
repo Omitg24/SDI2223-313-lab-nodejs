@@ -24,8 +24,8 @@
         {% for song in songs %}
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div style="width:200px">
-                    <a href="/songs/id">
-                        <img src="/images/song1.png" alt="logo"/>
+                    <a href="/songs/{{song._id}}">
+                        <img src="/covers/{{song._id}}.png" alt="logo"/>
                         <!-- http://www.socicon.com/generator.php -->
                         <div>{{ song.title }} </div>
                         <div class="small">{{ song.author }} </div>
