@@ -18,4 +18,23 @@ module.exports = function (app, commentsRepository) {
             });
         }
     });
+    app.get("/comments/delete/:_id", function (req, res) {
+        let filter = {_id: ObjectId(req.params._id)};
+        commentsRepository.findComment(filter, {}).then(comment => {
+            console.log(comment);
+            if (comment.author === req.session.user) {
+                commentsRepository.deleteComment(comment._id, function (commentId) {
+                    if (commentId == null) {
+                        res.send("Error al eliminar comentario");
+                    } else {
+                        res.send("Comentario eliminado");
+                    }
+                });
+            } else {
+                res.send("Solo puede borrar sus comentarios");
+            }
+        }).catch(error => {
+            res.send("Se ha producido un error al recuperar el commentario " + error);
+        })
+    });
 }
