@@ -1,12 +1,12 @@
-{%  extends "../layout.twig" %}
+{% extends "../layout.twig" %}
 
-{%  block title %} Detalles de canción {%  endblock %}
+{% block title %} Detalles de canción {% endblock %}
 
-{%  block main_container %}
+{% block main_container %}
     <div class="row">
         <div class="media col-xs-10">
             <div class="media-left media-middle">
-                <img class="media-object" src="/covers/{{song._id}}.png">
+                <img class="media-object" src="/covers/{{ song._id }}.png">
             </div>
             <div class="media-body">
                 <h2>{{ song.title }}</h2>
@@ -16,5 +16,41 @@
                 <!-- Cambiar el precio por "reproducir" si ya está comprada -->
             </div>
         </div>
+    </div>
+    <h2>Añadir comentario</h2>
+    <form class="form-horizontal" method="post" action="/comments/add/{{ song._id }}">
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-sm-2" for="text">Comentario:</label>
+                <div class="col-sm-8"><input id="text" type="text" class="form-control" name="text"
+                                             placeholder="Escriba el comentario" required="true"/></div>
+                <div class="col-sm-2"><button type="submit" class="btn btn-primary">Enviar</button></div>
+            </div>
+        </div>
+    </form>
+    <h2>Comentarios</h2>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Foto de perfil</th>
+                <th>Autor</th>
+                <th>Texto</th>
+                <th class="col-md-1"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for comment in comments %}
+                <tr>
+                    <td><img class="rounded-circle shadow-1-strong me-3"
+                             src="/images/user.png" alt="avatar" width="24"
+                             height="24"/></td>
+                    <td>{{ comment.author }}</td>
+                    <td>{{ comment.text }}</td>
+                    <td><a href="/comments/delete/{{ comment._id }}">Eliminar</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}
