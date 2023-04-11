@@ -11,10 +11,20 @@ userAudiosRouter.use(function (req, res, next) {
         if (req.session.user && song.author == req.session.user) {
             next();
         } else {
-            res.redirect("/shop");
+            let filter = {user: req.session.user, songId: ObjectId(songId)};
+            let options = {projection: {_id: 0, songId: 1}};
+            songsRepository.getPurchases(filter, options).then(purchasedIds => {
+                if (purchasedIds !== null && purchasedIds.length > 0) {
+                    next();
+                } else {
+                    res.redirect("/shop");
+                }
+            }).catch(error => {
+                res.redirect("/shop");
+            })
         }
     }).catch(error => {
         res.redirect("/shop");
     });
 });
-module.exports = userAudiosRouter
+module.exports = userAudiosRouter;

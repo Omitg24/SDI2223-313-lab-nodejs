@@ -138,6 +138,20 @@ module.exports = function (app, songsRepository, commentsRepository) {
             callback(true); // FIN
         }
     }
+    app.get('/songs/buy/:id', function (req, res) {
+        let songId = ObjectId(req.params.id);
+        let shop = {
+            user: req.session.user,
+            songId: songId
+        }
+        songsRepository.buySong(shop, function (shopId) {
+            if (shopId == null) {
+                res.send("Error al realizar la compra");
+            } else {
+                res.redirect("/purchases");
+            }
+        })
+    });
     app.get('/songs/:id', function (req, res) {
         let filter = {_id: ObjectId(req.params.id)};
         let options = {};
@@ -151,7 +165,7 @@ module.exports = function (app, songsRepository, commentsRepository) {
         }).catch(error => {
             res.send("Se ha producido un error al buscar la canción " + error);
         });
-    })
+    });
     app.get('/songs/:kind/:id', function (req, res) {
         let response = 'id: ' + req.params.id + '<br>'
             + 'Tipo de música: ' + req.params.kind;
@@ -176,4 +190,23 @@ module.exports = function (app, songsRepository, commentsRepository) {
             res.send("Se ha producido un error al listar las publicaciones del usuario: " + error)
         });
     });
+    app.get('/purchases', function (req, res) {
+        let filter = {user: req.session.user};
+        let options = {projection: {_id: 0, songId: 1}};
+        songsRepository.getPurchases(filter, options).then(purchasedIds => {
+            let purchasedSongs = [];
+            for (let i = 0; i < purchasedIds.length; i++) {
+                purchasedSongs.push(purchasedIds[i].songId)
+            }
+            let filter = {"_id": {$in: purchasedSongs}};
+            let options = {sort: {title: 1}};
+            songsRepository.getSongs(filter, options).then(songs => {
+                res.render("purchase.twig", {songs: songs});
+            }).catch(error => {
+                res.send("Se ha producido un error al listar las publicaciones del usuario: " + error)
+            });
+        }).catch(error => {
+            res.send("Se ha producido un error al listar las canciones del usuario " + error)
+        });
+    })
 };
