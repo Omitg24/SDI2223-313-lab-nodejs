@@ -6,8 +6,27 @@ module.exports = function (app, songsRepository, commentsRepository) {
         if(req.query.search != null && typeof(req.query.search) != "undefined" && req.query.search != ""){
             filter = {"title": {$regex: ".*" + req.query.search + ".*"}};
         }
-        songsRepository.getSongs(filter, options).then(songs => {
-            res.render("shop.twig", {songs: songs});
+        let page = parseInt(req.query.page); // Es String !!!
+        if (typeof req.query.page === "undefined" || req.query.page === null || req.query.page === "0") { //Puede no venir el param
+            page = 1;
+        }
+        songsRepository.getSongsPg(filter, options, page).then(result => {
+            let lastPage = result.total / 4;
+            if (result.total % 4 > 0) { // Sobran decimales
+                lastPage = lastPage + 1;
+            }
+            let pages = []; // paginas mostrar
+            for (let i = page - 2; i <= page + 2; i++) {
+                if (i > 0 && i <= lastPage) {
+                    pages.push(i);
+                }
+            }
+            let response = {
+                songs: result.songs,
+                pages: pages,
+                currentPage: page
+            }
+            res.render("shop.twig", response);
         }).catch(error => {
             res.send("Se ha producido un error al listar las canciones " + error)
         });
