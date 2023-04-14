@@ -163,24 +163,51 @@ module.exports = function (app, songsRepository, commentsRepository) {
             user: req.session.user,
             songId: songId
         }
-        songsRepository.buySong(shop, function (shopId) {
-            if (shopId == null) {
-                res.send("Error al realizar la compra");
-            } else {
-                res.redirect("/purchases");
-            }
-        })
+        let user = req.session.user;
+        userCanBuy(user, songId, function (canBuy) {
+           if (canBuy) {
+               songsRepository.buySong(shop, function (shopId) {
+                   if (shopId === null) {
+                       res.send("Error al realizar la compra");
+                   } else {
+                       res.redirect("/purchases");
+                   }
+               });
+           } else {
+               res.send("Se ha producido un error al comprar la canción o ya es tuya");
+           }
+        });
     });
+    function userCanBuy(user, songId, callback) {
+        let filterSongs = {$and:[{"_id": songId}, {"author": user}]};
+        let filterPurchases = {$and:[{"songId": songId}, {"user": user}]};
+        songsRepository.getSongs(filterSongs, {}).then(songs => {
+            if (songs === null || songs.length > 0) {
+                callback(false);
+            } else {
+                songsRepository.getPurchases(filterPurchases, {}).then(purchases => {
+                    if (purchases === null || purchases.length > 0) {
+                        callback(false);
+                    } else {
+                        callback(true);
+                    }
+                });
+            }
+        });
+    }
     app.get('/songs/:id', function (req, res) {
         let filter = {_id: ObjectId(req.params.id)};
         let options = {};
+        let user = req.session.user;
         songsRepository.findSong(filter, options).then(song => {
             let commentsFilter = {song_id: song._id};
-            commentsRepository.getComments(commentsFilter, options).then(comments => {
-                res.render("songs/song.twig", {song: song, comments: comments});
-            }).catch(error => {
-                res.send("Se ha producido un error al buscar los comentarios " + error);
-            });
+            userCanBuy(user, song._id, function (canBuy) {
+                commentsRepository.getComments(commentsFilter, options).then(comments => {
+                    res.render("songs/song.twig", {song: song, comments: comments, canBuy: canBuy});
+                }).catch(error => {
+                    res.send("Se ha producido un error al buscar los comentarios " + error);
+                });
+            })
         }).catch(error => {
             res.send("Se ha producido un error al buscar la canción " + error);
         });
