@@ -199,7 +199,23 @@ module.exports = function (app, songsRepository, commentsRepository) {
             let commentsFilter = {song_id: song._id};
             userCanBuy(user, song._id).then(canBuy => {
                 commentsRepository.getComments(commentsFilter, options).then(comments => {
-                    res.render("songs/song.twig", {song: song, comments: comments, canBuy: canBuy});
+                    let settings = {
+                        url: "https://www.freeforexapi.com/api/live?pairs=EURUSD",
+                        method: "get",
+                        headers: {
+                            "token": "ejemplo",
+                        }
+                    }
+                    let rest = app.get("rest");
+                    rest(settings, function (error, response, body) {
+                        console.log("cod: " + response.statusCode + " Cuerpo :" + body);
+                        let responseObject = JSON.parse(body);
+                        let rateUSD = responseObject.rates.EURUSD.rate;
+                        // nuevo campo "usd" redondeado a dos decimales
+                        let songValue= rateUSD * song.price;
+                        song.usd = Math.round(songValue * 100) / 100;
+                        res.render("songs/song.twig", {song: song, comments: comments, canBuy: canBuy});
+                    })
                 }).catch(error => {
                     res.send("Se ha producido un error al buscar los comentarios " + error);
                 });

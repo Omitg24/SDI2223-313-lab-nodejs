@@ -14,7 +14,7 @@
                 <p> {{ song.kind }}</p>
                 {%  if canBuy %}
                     <a class="btn btn-primary pull-right"
-                       href="/songs/buy/{{ song._id }}">{{ song.price }} €</a>
+                       href="/songs/buy/{{ song._id }}">{{ song.price }} € - {{ song.usd }} $</a>
                 {% else %}
                     <audio controls>
                         <source src="/audios/{{ song._id }}.mp3" type="audio/mpeg">
