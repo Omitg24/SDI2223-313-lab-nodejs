@@ -21,6 +21,7 @@
 </div>
 
 <script>
+    window.history.pushState("", "", "/apiclient/client.html?w=login")
     $("#boton-login").click(function () {
         $.ajax({
             url: URLbase + "/users/login",
@@ -30,12 +31,14 @@
                 password: $("#password").val(),
             },
             dataType: "json",
-            success: function success(response) {
-                console.log(response.token); // Prueba.
+            success:function success(response){
+                console.log(response.token); // <- Prueba
                 token = response.token;
+                Cookies.set('token', response.token);
                 $("#main-container").load("widget-songs.html");
             },
             error: function (error) {
+                Cookies.remove('token');
                 $("#widget-login")
                     .prepend("<div class='alert alert-danger'>Usuario no encontrado</div>");
             }

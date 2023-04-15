@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script
             src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/javascripts/cookie.js"></script>
 </head>
 <body>
 <!-- Barra de Navegación superior -->
@@ -38,7 +39,20 @@
 <script>
     let token;
     let URLbase = "http://localhost:8081/api/v1.0";
-    $("#main-container").load("widget-login.html");
+    if ( Cookies.get('token') != null ){
+        token = Cookies.get('token');
+        $( "#main-container" ).load("widget-songs.html");
+        let url = new URL(window.location.href);
+        let w = url.searchParams.get("w");
+        if (w === "login") {
+            $("#main-container").load("widget-login.html");
+        }
+        if (w === "songs") {
+            $("#main-container").load("widget-songs.html");
+        }
+    }else {
+        $( "#main-container" ).load("widget-login.html");
+    }
 
     function widgetSongs() {
         $("#main-container").load("widget-songs.html");
