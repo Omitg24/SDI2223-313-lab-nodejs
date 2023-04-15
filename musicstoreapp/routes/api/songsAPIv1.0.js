@@ -1,5 +1,16 @@
 const {ObjectId} = require("mongodb");
 module.exports = function (app, songsRepository, usersRepository) {
+    app.get("/api/v1.0/songs", function (req, res) {
+        let filter = {};
+        let options = {};
+        songsRepository.getSongs(filter, options).then(songs => {
+            res.status(200);
+            res.send({songs: songs})
+        }).catch(error => {
+            res.status(500);
+            res.json({ error: "Se ha producido un error al recuperar las canciones." })
+        });
+    });
     app.get("/api/v1.0/songs/:id", function (req, res) {
         try {
             let songId = ObjectId(req.params.id)
