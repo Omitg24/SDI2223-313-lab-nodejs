@@ -1,4 +1,4 @@
-<div id="widget-agregar">
+<div id="widget-add">
     <div class="form-group">
         <label class="control-label col-sm-2" for="title-add">Nombre:</label>
         <div class="col-sm-10">
@@ -28,24 +28,35 @@
 </div>
 
 <script>
-  function widgetAddSong( ) {
-    $.ajax({
-      url: URLbase + "/songs",
-      type: "POST",
-      data: {
-        title: $("#title-add").val(),
-        kind: $("#kind-add").val(),
-        price: $("#price-add").val()
-      },
-      dataType: 'json',
-      headers: {"token": token},
-      success: function (response) {
-        console.log(response); // <-- Prueba
-        $("#main-container").load("widget-songs.html");
-      },
-      error: function (error) {
-        $("#main-container").load("widget-login.html");
-      }
-    });
-  }
+    function widgetAddSong() {
+        $.ajax({
+            url: URLbase + "/songs",
+            type: "POST",
+            data: {
+                title: $("#title-add").val(),
+                kind: $("#kind-add").val(),
+                price: $("#price-add").val()
+            },
+            dataType: 'json',
+            headers: {"token": token},
+            success: function (response) {
+                console.log(response); // <-- Prueba
+                $("#main-container").load("widget-songs.html");
+            },
+            error: function (response) {
+                console.log(response);
+                $("#div-errors").remove();
+                let current_errors = (typeof response.responseJSON.errors === "undefined") ? null : response.responseJSON.errors;
+                if (current_errors != null && current_errors.length > 0) {
+                    $("#widget-add").prepend("<div id = 'div-errors' class='alert alert-danger'><ul id = 'ul-errors'></ul></div>");
+                    for (let i = 0; i < current_errors.length; i++) {
+                        $("#ul-errors").append("<li>" + current_errors[i].message + "</li>");
+                    }
+                } else {
+                    $("#widget-add")
+                        .prepend("<div id = 'div-errors' class='alert alert-danger'>Se ha producido un error inesperado</div>");
+                }
+            }
+        });
+    }
 </script>

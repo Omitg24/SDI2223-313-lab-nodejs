@@ -66,8 +66,19 @@
                 console.log("Canción eliminada: " + _id);
                 $("#" + _id).remove(); // eliminar el <tr> de la canción
             },
-            error: function (error) {
-                $("#main-container").load("widget-login.html");
+            error: function (response) {
+                $("#songsTableBody").empty();
+                console.log(response);
+                $("#div-errors").remove();
+                let current_errors = (typeof response.responseJSON.errors === "undefined") ? null : response.responseJSON.errors;
+                if (current_errors != null && current_errors.length > 0) {
+                    $("#widget-songs").prepend("<div id = 'div-errors' class='alert alert-danger'><ul id = 'ul-errors'></ul></div>");
+                    $("#ul-errors").append("<li>" + current_errors + "</li>");
+                } else {
+                    $("#widget-songs")
+                        .prepend("<div id = 'div-errors' class='alert alert-danger'>Se ha producido un error inesperado</div>");
+                }
+                loadSongs();
             }
         });
     }
